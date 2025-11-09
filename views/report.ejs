@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= student.name %> | Report Card
+    </title>
+    <link rel="stylesheet" href="/admin.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="navbar">
+            <h2>
+                <%= student.name %> - Report Card
+            </h2>
+            <a href="/admin"><button class="logout-btn">Back to Dashboard</button></a>
+        </div>
+
+        <div class="card-info">
+            <div class="details">
+                <p><strong>Roll No:</strong>
+                    <%= student.rollNo %>
+                </p>
+                <p><strong>Course:</strong>
+                    <%= student.course %>
+                </p>
+                <p><strong>Semester:</strong>
+                    <%= student.semester || "N/A" %>
+                </p>
+                <p><strong>Department:</strong>
+                    <%= student.department || "N/A" %>
+                </p>
+                <p><strong>GPA:</strong>
+                    <%= student.gpa %>
+                </p>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <h3>Subject-wise Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Code</th>
+                        <th>Subject Name</th>
+                        <th>Marks</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (student.results && student.results.length> 0) { %>
+                        <% student.results.forEach(r=> { %>
+                            <tr>
+                                <td>
+                                    <%= r.code %>
+                                </td>
+                                <td>
+                                    <%= r.subject %>
+                                </td>
+                                <td>
+                                    <%= r.marks %>
+                                </td>
+                                <td>
+                                    <%= r.grade %>
+                                </td>
+                                <td>
+                                    <%= r.status %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;">No records available</td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

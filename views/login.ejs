@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Student Result System</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Student Result System</h2>
+        <p>Kanpur Institute of Technology</p>
+
+        <div class="login-form">
+            <form action="/login" method="POST">
+                <section>
+                    <label>Login As:</label><br>
+                    <select name="role" required>
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </section>
+
+                <section>
+                    <label>Roll No / Email:</label><br>
+                    <input type="text" name="user" required>
+                </section>
+
+                <section>
+                    <label>Password:</label><br>
+                    <input type="password" name="password" required>
+                </section>
+
+                <% if (error) { %>
+                    <p style="color:red; text-align:center;">
+                        <%= error %>
+                    </p>
+                    <% } %>
+
+                        <button type="submit">Log In</button>
+            </form>
+        </div>
+
+        <p>© 2025 | Designed by Mohammad Aadil</p>
+    </div>
+</body>
+
+</html>

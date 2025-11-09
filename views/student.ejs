@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Portal</title>
+    <link rel="stylesheet" href="/student.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <h2>Student Result Portal</h2>
+            <form action="/" method="GET">
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        </div>
+
+        <!-- STUDENT CARD -->
+        <div class="card">
+            <h4>Welcome, <span>
+                    <%= student.name %>
+                </span></h4>
+
+            <div class="card-info">
+                <!-- <img src="/images/student.jpg" alt="Student Photo"> -->
+                <img src="<%= student.photo %>" alt="">
+                <div class="details">
+                    <p><strong>Roll No:</strong>
+                        <%= student.rollNo %>
+                    </p>
+                    <p><strong>Course:</strong>
+                        <%= student.course %>
+                    </p>
+                    <p><strong>Semester:</strong>
+                        <%= student.semester || '4th' %>
+                    </p>
+                    <p><strong>Department:</strong>
+                        <%= student.department || 'Computer Science' %>
+                    </p>
+                    <p><strong>Current GPA:</strong>
+                        <%= student.gpa %>
+                    </p>
+                    <p id="status"><strong>Status:</strong> Active</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER SECTION -->
+        <div class="filter">
+            <label for="semester">Filter by Semester:</label>
+            <select id="semester">
+                <option value="all">All Semesters</option>
+                <option value="sem1">Semester 1</option>
+                <option value="sem2">Semester 2</option>
+                <option value="sem3">Semester 3</option>
+                <option value="sem4">Semester 4</option>
+            </select>
+        </div>
+
+        <!-- RESULT TABLE -->
+        <div class="result-section">
+            <h3>Detailed Results</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Code</th>
+                        <th>Subject Name</th>
+                        <th>Marks</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (student.results && student.results.length> 0) { %>
+                        <% student.results.forEach(result=> { %>
+                            <tr>
+                                <td>
+                                    <%= result.code %>
+                                </td>
+                                <td>
+                                    <%= result.subject %>
+                                </td>
+                                <td>
+                                    <%= result.marks %>
+                                </td>
+                                <td>
+                                    <%= result.grade %>
+                                </td>
+                                <td>
+                                    <%= result.status %>
+                                </td>
+                                <td>
+                                    <%= result.semester %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" style="text-align:center; color: gray;">No results available
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- REMARKS -->
+        <div class="remarks">
+            <p><strong>Remarks:</strong>
+                <%= student.remark || 'Excellent academic performance! Keep it up 👏' %>
+            </p>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>© 2025 | Designed by Mohammad Aadil | Kanpur Institute of Technology, Kanpur</p>
+        </footer>
+
+    </div>
+</body>
+
+</html>

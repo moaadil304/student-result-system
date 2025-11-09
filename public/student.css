@@ -1,0 +1,201 @@
+/* ===== Student Result Portal - Style ===== */
+
+/* Page Setup */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #FFF9AF;
+    /* soft yellow background */
+}
+
+/* Container */
+.container {
+    width: 90%;
+    margin: 30px auto;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #154D71;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.logout-btn,
+.navbar button {
+    background-color: #33A1E0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.logout-btn:hover,
+.navbar button:hover {
+    background-color: #1C6EA4;
+}
+
+/* Student Card */
+.card {
+    background-color: #FFFFFF;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #1C6EA4;
+}
+
+.card h4 {
+    color: #154D71;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.card span {
+    color: #1C6EA4;
+}
+
+/* Card Info Layout */
+.card-info {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.card-info img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #1C6EA4;
+}
+
+.details p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 15px;
+}
+
+/* Filter Section */
+.filter {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter label {
+    color: #154D71;
+    font-weight: 600;
+}
+
+.filter select {
+    padding: 8px;
+    border: 1.5px solid #1C6EA4;
+    border-radius: 6px;
+    background-color: #f7fcff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.filter select:focus {
+    border-color: #33A1E0;
+    box-shadow: 0 0 4px #33A1E0;
+}
+
+/* Results Table */
+.result-section {
+    margin-top: 30px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-top: 5px solid #1C6EA4;
+}
+
+.result-section h3 {
+    color: #154D71;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+thead {
+    background-color: #1C6EA4;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+tbody tr:hover {
+    background-color: #f2f9ff;;
+}
+
+/* Remarks Box */
+.remarks {
+    margin-top: 25px;
+    background-color: #FFFFFF;
+    padding: 15px 20px;
+    border-left: 5px solid #1C6EA4;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.remarks p {
+    margin: 0;
+    color: #154D71;
+    font-size: 15px;
+}
+
+/* Footer */
+footer {
+    margin-top: 30px;
+    background-color: #154D71;
+    color: white;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    table {
+        font-size: 13px;
+    }
+}

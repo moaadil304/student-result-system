@@ -1,0 +1,130 @@
+/* ===== Student Result System - Login Page ===== */
+
+/* Page Setup */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #FFF9AF;
+    /* Soft yellow background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('images/bg-login.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Main Container */
+.container {
+    background-color: #FFFFFF;
+    /* White box */
+    padding: 40px 50px;
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(21, 77, 113, 0.25);
+    text-align: center;
+    width: 300px;
+    border-top: 6px solid #1C6EA4;
+    /* Medium blue accent */
+    height: 70%;
+}
+
+/* Heading */
+.container h2 {
+    color: #154D71;
+    /* Dark blue */
+    margin-bottom: 5px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.container p {
+    color: #1C6EA4;
+    /* Medium blue */
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Login Form */
+.login-form {
+    text-align: left;
+}
+
+.login-form section {
+    margin-bottom: 18px;
+    color: #154D71;
+    /* Deep navy text */
+    font-weight: 500;
+}
+
+/* Input Fields & Dropdown */
+.login-form select,
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1.5px solid #1C6EA4;
+    /* Medium blue border */
+    outline: none;
+    margin-top: 5px;
+    font-size: 14px;
+    background-color: #f7fcff;
+    transition: 0.3s ease;
+}
+
+.login-form select:focus,
+.login-form input:focus {
+    border-color: #33A1E0;
+    /* Light blue focus border */
+    box-shadow: 0 0 4px #33A1E0;
+}
+
+/* Login Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1C6EA4;
+    /* Medium blue */
+    color: #FFFFFF;
+    /* White text */
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #154D71;
+    /* Dark blue hover */
+    transform: scale(1.02);
+}
+
+/* Error Message Placeholder */
+.login-form p {
+    text-align: center;
+    color: #e63946;
+    /* Soft red for error text */
+    font-size: 13px;
+    height: 16px;
+    margin: 8px 0;
+}
+
+/* Footer */
+.container>p:last-child {
+    margin-top: 25px;
+    color: #154D71;
+        font-size: 13px;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 30px 25px;
+    }
+}
