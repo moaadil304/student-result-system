@@ -1,171 +1,138 @@
+
 const express = require("express");
 const app = express();
 const path = require("path");
+const mysql = require("mysql2");
 const port = process.env.PORT || 8080;
-app.set("view engine" , "ejs");
-app.set("views" , path.join(__dirname,"views"));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req, res) => {
-    res.render('login', { error: null });
+// DB connection (callback mode)
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "MOHaadil2501mysql",
+  database: "student_system"
 });
-const fs = require("fs");
 
+// HOME LOGIN PAGE
+app.get("/", (req, res) => {
+  res.render("login", { error: null });
+});
+
+// LOGIN ROUTE
 app.post("/login", (req, res) => {
-  const { user, password, role } = req.body;  // from form
+  const { user, password, role } = req.body;
 
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error reading data file");
-    }
+  db.query(
+    "SELECT * FROM users WHERE (rollNo=? OR email=?) AND password=?",
+    [user, user, password],
+    (err, results) => {
+      if (err) return res.send("Database error: " + err);
 
-    const students = JSON.parse(data);
+      if (results.length === 0)
+        return res.render("login", { error: "Invalid credentials" });
 
-    // match roll/email and password
-    const found = students.find(
-      s => (s.rollNo === user || s.email === user) && s.password === password
-    );
+      const found = results[0];
 
-    if (found) {
-      if (role === "admin" && found.role === "admin") {
-        console.log("Admin login successful!");
-        res.render("admin", { students });
-      } else if (role === "student" && found.role === "student") {
-        console.log(" Student login successful!");
-        res.render("student", { student: found });
+      if (found.role !== role)
+        return res.render("login", { error: "Role mismatch" });
+
+      if (role === "admin") {
+        db.query("SELECT * FROM users WHERE role='student'", (err2, students) => {
+          if (err2) return res.send(err2);
+          return res.render("admin", { students });
+        });
       } else {
-        console.log("⚠️ Role mismatch!");
-        res.render("login", { error: "Invalid role selected" });
+        db.query(
+          "SELECT * FROM results WHERE student_id=?",
+          [found.id],
+          (err3, resultRows) => {
+            if (err3) return res.send(err3);
+
+            found.results = resultRows;
+            return res.render("student", { student: found });
+          }
+        );
       }
-    } else {
-      console.log(" Invalid credentials!");
-      res.render("login", { error: "Invalid Roll No / Email or Password" });
     }
-  });
-
+  );
 });
 
-// ADD NEW STUDENT ROUTE
-app.post("/add-student", (req, res) => {
-  const newStudent = {
-    id: req.body.id,
-    name: req.body.name,
-    rollNo: req.body.rollNo,
-    email: req.body.email,
-    password: req.body.password,
-    course: req.body.course,
-    semester: req.body.semester || "N/A",
-    department: req.body.department || "N/A",
-    gpa: parseFloat(req.body.gpa) || 0,
-    role: "student",
-    photo: req.body.photo || "/images/student.jpg",
-    results: []
-  };
-
-  // Read existing data
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) return res.status(500).send("Error reading file");
-
-    const students = JSON.parse(data);
-    students.push(newStudent); // add new record
-
-    // Write back to file
-    fs.writeFile("./data/students.json", JSON.stringify(students, null, 2), err => {
-      if (err) return res.status(500).send("Error saving data");
-      console.log("✅ New student added:", newStudent.name);
-      res.render("admin", { students }); // refresh dashboard
-    });
-  });
-});
-
-// ADMIN DASHBOARD ROUTE
+// ADMIN DASHBOARD
 app.get("/admin", (req, res) => {
-  const fs = require("fs");
-  const success = req.query.success || null;
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error loading admin data");
-    }
-    let allUsers = JSON.parse(data);
-    const students = allUsers.filter(u => u.role === "student");
-    const admins = allUsers.filter(u => u.role === "admin");
-
-    res.render("admin", { students, success });
+  db.query("SELECT * FROM users WHERE role='student'", (err, students) => {
+    if (err) return res.send(err);
+    res.render("admin", { students });
   });
 });
 
+// ADD STUDENT
+app.post("/add-student", (req, res) => {
+  const { id, name, rollNo, email, password, course, semester, department, gpa, photo } = req.body;
 
-// SHOW EDIT PAGE
-app.get("/edit-student/:id", (req, res) => {
-  const id = req.params.id;
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) return res.status(500).send("Error reading file");
-
-    const students = JSON.parse(data);
-    const student = students.find(s => s.id === id);
-
-    if (!student) return res.status(404).send("Student not found");
-    res.render("edit-student", { student });
-  });
-});
-
-// HANDLE UPDATE
-app.post("/edit-student/:id", (req, res) => {
-  const id = req.params.id;
-
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) return res.status(500).send("Error reading file");
-
-    let students = JSON.parse(data);
-    const index = students.findIndex(s => s.id === id);
-    if (index === -1) return res.status(404).send("Student not found");
-
-    // Preserve old results
-    const updatedStudent = {
-      ...students[index],
-      id: req.body.id,
-      name: req.body.name,
-      rollNo: req.body.rollNo,
-      email: req.body.email,
-      password: req.body.password,
-      course: req.body.course,
-      semester: req.body.semester || "N/A",
-      department: req.body.department || "N/A",
-      gpa: parseFloat(req.body.gpa) || 0,
-      role: req.body.role,
-      photo: req.body.photo || "/images/student.jpg"
-    };
-
-    students[index] = updatedStudent;
-
-    fs.writeFile("./data/students.json", JSON.stringify(students, null, 2), err => {
-      if (err) return res.status(500).send("Error saving data");
-      console.log(`✅ Student updated: ${updatedStudent.name}`);
+  db.query(
+    `INSERT INTO users (id, name, rollNo, email, password, course, semester, department, gpa, role, photo)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'student', ?)`,
+    [id, name, rollNo, email, password, course, semester, department, gpa, photo],
+    (err) => {
+      if (err) return res.send(err);
       res.redirect("/admin");
-    });
+    }
+  );
+});
+
+// EDIT STUDENT PAGE
+app.get("/edit-student/:id", (req, res) => {
+  db.query("SELECT * FROM users WHERE id=?", [req.params.id], (err, rows) => {
+    if (err) return res.send(err);
+
+    if (rows.length === 0) return res.send("Student not found");
+
+    res.render("edit-student", { student: rows[0] });
   });
 });
 
+// UPDATE STUDENT
+app.post("/edit-student/:id", (req, res) => {
+  const { id, name, rollNo, email, password, course, semester, department, gpa, photo, role } = req.body;
 
-// VIEW REPORT (Admin)
+  db.query(
+    `UPDATE users SET id=?, name=?, rollNo=?, email=?, password=?, course=?, semester=?, department=?, gpa=?, photo=?, role=? WHERE id=?`,
+    [id, name, rollNo, email, password, course, semester, department, gpa, photo, role, req.params.id],
+    (err) => {
+      if (err) return res.send(err);
+
+      res.redirect("/admin");
+    }
+  );
+});
+
+// REPORT PAGE
 app.get("/report/:id", (req, res) => {
   const id = req.params.id;
-  fs.readFile("./data/students.json", "utf8", (err, data) => {
-    if (err) return res.status(500).send("Error reading file");
 
-    const students = JSON.parse(data);
-    const student = students.find(s => s.id === id);
+  db.query("SELECT * FROM users WHERE id=?", [id], (err, userRows) => {
+    if (err) return res.send(err);
 
-    if (!student) return res.status(404).send("Student not found");
+    if (userRows.length === 0) return res.send("Student not found");
 
-    res.render("report", { student });
+    const student = userRows[0];
+
+    db.query("SELECT * FROM results WHERE student_id=?", [id], (err2, results) => {
+      if (err2) return res.send(err2);
+
+      student.results = results;
+
+      res.render("report", { student });
+    });
   });
 });
 
-
-app.listen(port , () =>{
-    console.log(`listening on port ${port}`);
+// SERVER START
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
