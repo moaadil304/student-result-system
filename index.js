@@ -5,18 +5,30 @@ const path = require("path");
 const mysql = require("mysql2");
 const port = process.env.PORT || 8080;
 
+require("dotenv").config();
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // DB connection (callback mode)
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "MOHaadil2501mysql",
+//   database: "student_system"
+// });
+
+//for deployment
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "MOHaadil2501mysql",
-  database: "student_system"
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT
 });
+
 
 // HOME LOGIN PAGE
 app.get("/", (req, res) => {
