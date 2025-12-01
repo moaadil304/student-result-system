@@ -155,10 +155,8 @@ app.get("/report/:id", (req, res) => {
 });
 
 // SERVER START
-// app.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
 
-
-module.exports = app;
 
