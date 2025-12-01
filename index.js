@@ -21,7 +21,19 @@ app.use(express.static("public"));
 // });
 
 //for deployment
-const db = mysql.createConnection(process.env.DATABASE_URL);
+// const db = mysql.createPool(process.env.DATABASE_URL);
+
+
+const db = mysql.createPool({
+  uri: process.env.DATABASE_URL,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 
 
 
@@ -141,6 +153,10 @@ app.get("/report/:id", (req, res) => {
 });
 
 // SERVER START
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running at http://localhost:${port}`);
+// });
+
+
+module.exports = app;
+
