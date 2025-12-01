@@ -27,11 +27,13 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 
 const db = mysql.createPool({
-  connectionString: process.env.DATABASE_URL,
-
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
   ssl: {
     rejectUnauthorized: false
   }
